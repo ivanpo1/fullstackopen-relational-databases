@@ -1,0 +1,31 @@
+
+### CREATE BLOG
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "author": "Don Tester",
+  "title": "Testing creation of Blog",
+  "url": "www.dontester.com"
+}
+
+### Testing Failure Lack Of Required Field
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+"author": "Don Tester",
+"url": "www.dontester.com"
+}
+
+### CREATE USER
+
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "Testing",
+  "name": "Tester",
+  "password": "Testing"
+}
