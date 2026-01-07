@@ -12,11 +12,11 @@ app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 
 const errorMiddleware = (error, req, res, next) => {
-    console.error(error.message)
-    console.log(error)
+    console.error('error.message', error.message)
+    console.log('error', error)
 
     if (error.name === 'SequelizeValidationError') {
-        const errors = error.errors.map(error => {
+        const message = error.errors.map(error => {
             const field = error.path.split('.')
 
             let message = error.message
@@ -24,14 +24,28 @@ const errorMiddleware = (error, req, res, next) => {
                 message = `${field} cannot be empty`
             }
 
-            return { field, message }
+            if (error.message.includes('Validation isEmail on username failed')) {
+                message = `Username must be a valid Email address`
+            }
+
+            return message
         })
 
         return res.status(400).json({
             error: 'Validation Failure',
-            reason: errors
+            message: message
             }
         )
+    }
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+        const errors = error.errors.map(error => {
+            return error.message
+        })
+
+        return res.status(400).json({
+            error: errors
+        })
     }
 
     res.status(500).json({

@@ -4,3 +4,12 @@ Content-Type: application/json
 {
   "likes": 5
 }
+
+###
+
+PUT http://localhost:3001/api/users/Testing
+Content-Type: application/json
+
+{
+  "username": "don@donjohn.com"
+}

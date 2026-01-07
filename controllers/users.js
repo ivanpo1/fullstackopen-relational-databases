@@ -30,6 +30,13 @@ router.put('/:username', async (req, res, next) => {
             }
         })
 
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
+                message: `User with username '${req.params.username}' does not exist`
+            })
+        }
+
         user.username = req.body.username
         await user.save()
 
