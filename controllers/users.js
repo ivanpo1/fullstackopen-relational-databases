@@ -1,11 +1,16 @@
 import {Router} from 'express'
 import User from '../models/user.js'
 import bcrypt from "bcrypt";
+import {Blog} from "../models/index.js";
 
 const router = Router()
 
 router.get('/', async (req, res) => {
-    const users = await User.findAll()
+    const users = await User.findAll({
+        include: {
+            model: Blog,
+        }
+    })
     res.json(users)
 })
 
