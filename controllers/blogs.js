@@ -3,6 +3,7 @@ import {Blog, User} from '../models/index.js'
 import {SECRET} from "../util/config.js";
 import jwt from "jsonwebtoken";
 import {Op} from "sequelize";
+import {sequelize} from "../util/db.js";
 
 const router = Router()
 
@@ -38,23 +39,24 @@ router.get('/', async(req, res) => {
         ]
 
     }
-
     const blogs = await Blog.findAll({
         attributes: { exclude: ['userId']},
         include: {
             model: User,
             attributes: ['name']
         },
-        where
+        where,
+        order: [['likes', 'DESC']]
     })
     res.json(blogs)
 })
 
 router.post('/', tokenExtractor, async (req, res, next) => {
     try {
-        const { title, url, author } = req.body
+        const { title, url, author, year } = req.body
         const user = await User.findByPk(req.decodedToken.id)
-        const blog = await Blog.create({ title, url, author, userId: user.id })
+        console.log('user', user)
+        const blog = await Blog.create({ title, url, author, year, user_id: user.id })
         res.json(blog)
     } catch (error) {
         next(error)
