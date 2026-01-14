@@ -3,6 +3,8 @@ import { Router } from 'express'
 import { SECRET } from '../util/config.js'
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
+import { ActiveSession } from "../models/index.js";
+
 
 const router = Router()
 
@@ -13,7 +15,8 @@ router.post('/', async (req, res) => {
     const user = await User.findOne({
         where: {
             username: username
-        }
+        },
+        attributes: { include: ['passwordHash']},
     })
 
     const passwordCorrect = user === null ? false : await bcrypt.compare(password, user.passwordHash)
@@ -30,6 +33,7 @@ router.post('/', async (req, res) => {
     }
 
     const token = jwt.sign(userForToken, SECRET)
+    await ActiveSession.create({ user_id: user.id })
 
     res.status(200).send({ token, username: user.username, name: user.name })
 })

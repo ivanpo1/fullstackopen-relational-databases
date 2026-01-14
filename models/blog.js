@@ -32,7 +32,7 @@ Blog.init({
             max: new Date().getFullYear(),
         }
     },
-    user_id: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

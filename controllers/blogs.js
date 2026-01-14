@@ -57,7 +57,7 @@ router.post('/', tokenExtractor, async (req, res, next) => {
         const { title, url, author, year } = req.body
         const user = await User.findByPk(req.decodedToken.id)
         console.log('user', user)
-        const blog = await Blog.create({ title, url, author, year, user_id: user.id })
+        const blog = await Blog.create({ title, url, author, year, userId: user.id })
         res.json(blog)
     } catch (error) {
         next(error)
@@ -85,9 +85,7 @@ router.put('/:id', blogFinder, async (req, res, next) => {
 router.delete('/:id', tokenExtractor, blogFinder, async (req, res, next) => {
     try {
         if (!req.blog) { return res.status(404).json({ error: 'Blog not found'})}
-        const user = await User.findByPk(req.decodedToken.id)
-
-        if (user.id === req.blog.userId) {
+        if (req.decodedToken.id === req.blog.userId) {
             await req.blog.destroy()
             res.status(204).end()
         } else {

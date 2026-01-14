@@ -1,54 +1,21 @@
-
-### CREATE BLOG
-POST http://localhost:3001/api/blogs
-Content-Type: application/json
-
-{
-  "author": "Don Tester",
-  "title": "Testing creation of Blog",
-  "url": "www.dontester.com"
-}
-
-### Testing Failure Lack Of Required Field
-
-POST http://localhost:3001/api/blogs
-Content-Type: application/json
-
-{
-"author": "Don Tester",
-"url": "www.dontester.com"
-}
-
-### CREATE USER
+### Create user
 
 POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "username": "Testing",
+  "username": "testing1@correct.com",
   "name": "Tester",
-  "password": "Testing"
+  "password": "testing"
 }
 
-###
+### Create second user
 
 POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-"username": "testing@correct.com",
+"username": "testing2@correct.com",
 "name": "Tester",
 "password": "testing"
-}
-
-###
-POST http://localhost:3001/api/blogs
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdAY29ycmVjdC5jb20iLCJpZCI6MSwiaWF0IjoxNzY3OTAzNjg2fQ.-DLKPUpySMiFvMPDfxCpiFI0CEw8_stV1kvt6jomfiQ
-
-{
-  "author": "Seeing if i can delete this",
-  "title": "testing",
-  "url": "www.dontester.com",
-  "year": "1990"
 }

@@ -5,3 +5,44 @@ Content-Type: application/json
   "username": "testing@correct.com",
   "password": "testing"
 }
+
+> {%
+  client.global.set("auth_token", response.body.token);
+%}
+
+###
+
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "testing2@correct.com",
+  "password": "testing"
+}
+
+> {%
+  client.global.set("auth_token", response.body.token);
+%}
+
+### Create blog with the token
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "author": "Don Testing",
+  "title": "Testing creation of Blog Entry",
+  "url": "www.dontester.com",
+  "year": "1992"
+}
+
+###
+POST http://localhost:3001/api/blogs/testing
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+###
+
+DELETE http://localhost:3001/api/blogs/2
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}

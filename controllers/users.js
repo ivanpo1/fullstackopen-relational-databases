@@ -59,7 +59,14 @@ router.post('/', async (req, res, next) => {
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
     const user = await User.create({ username, name, passwordHash })
-    res.json(user)
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      createdAt: user.createdAt
+    })
+
   } catch (error) {
     next(error)
   }
