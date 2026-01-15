@@ -34,8 +34,9 @@ router.post('/', async (req, res) => {
     }
 
     const sessionId = uuidv4()
+
     const token = jwt.sign({ ...userForToken, sessionId }, SECRET)
-    await ActiveSession.create({ user_id: user.id, session_id: sessionId })
+    await ActiveSession.create({ userId: user.id, sessionId: sessionId, isActive: true })
 
     res.status(200).send({ token, username: user.username, name: user.name })
 })

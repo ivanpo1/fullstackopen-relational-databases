@@ -5,7 +5,7 @@ import User from "../models/user.js";
 import req from "express/lib/request.js";
 
 const verifySession = async (sessionId) => {
-  const session = await ActiveSession.findOne({ where: { sessionId }})
+  const session = await ActiveSession.findOne({ where: { sessionId: sessionId }})
   if (!session.isActive) {
     const error = new Error('session expired')
     error.status = 401
