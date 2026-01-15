@@ -4,6 +4,7 @@ import { SECRET } from '../util/config.js'
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
 import { ActiveSession } from "../models/index.js";
+import { v4 as uuidv4 } from 'uuid';
 
 
 const router = Router()
@@ -32,8 +33,9 @@ router.post('/', async (req, res) => {
         id: user.id,
     }
 
-    const token = jwt.sign(userForToken, SECRET)
-    await ActiveSession.create({ user_id: user.id })
+    const sessionId = uuidv4()
+    const token = jwt.sign({ ...userForToken, sessionId }, SECRET)
+    await ActiveSession.create({ user_id: user.id, session_id: sessionId })
 
     res.status(200).send({ token, username: user.username, name: user.name })
 })

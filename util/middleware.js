@@ -4,9 +4,9 @@ import { ActiveSession } from "../models/index.js"
 import User from "../models/user.js";
 import req from "express/lib/request.js";
 
-const verifySession = async (userId) => {
-  const session = await ActiveSession.findOne({ where: { userId }})
-  if (!session) {
+const verifySession = async (sessionId) => {
+  const session = await ActiveSession.findOne({ where: { sessionId }})
+  if (!session.isActive) {
     const error = new Error('session expired')
     error.status = 401
     throw error
@@ -29,10 +29,9 @@ export const tokenExtractor = async (req, res, next) => {
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     try {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET)
-      await verifySession(req.decodedToken.id)
+      await verifySession(req.decodedToken.sessionId)
       req.user = await verifyUserNotDisabled(req.decodedToken.id)
     } catch (error) {
-      // return res.status(401).json({ error: 'token invalid ' })
       return res.status(error.status || 401).json({ error: error.message})
     }
 
