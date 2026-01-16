@@ -89,6 +89,7 @@ router.put('/:username', async (req, res, next) => {
 
     user.username = req.body.username
     await user.save()
+    res.json(user)
 
   } catch (error) {
     next(error)

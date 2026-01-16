@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import { SECRET } from "./config.js";
 import { ActiveSession } from "../models/index.js"
 import User from "../models/user.js";
-import req from "express/lib/request.js";
 
 const verifySession = async (sessionId) => {
   const session = await ActiveSession.findOne({ where: { sessionId: sessionId }})
@@ -42,5 +41,47 @@ export const tokenExtractor = async (req, res, next) => {
   }
 
   next()
+}
+
+export const errorMiddleware = (error, req, res, next) => {
+  console.error('error.message', error.message)
+  console.log('error', error)
+
+  if (error.name === 'SequelizeValidationError') {
+    const message = error.errors.map(error => {
+      const field = error.path.split('.')
+
+      let message = error.message
+      if (error.message.includes('cannot be null')) {
+        message = `${field} cannot be empty`
+      }
+
+      if (error.message.includes('Validation isEmail on username failed')) {
+        message = `Username must be a valid Email address`
+      }
+
+      return message
+    })
+
+    return res.status(400).json({
+        error: 'Validation Failure',
+        message: message
+      }
+    )
+  }
+
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    const errors = error.errors.map(error => {
+      return error.message
+    })
+
+    return res.status(400).json({
+      error: errors
+    })
+  }
+
+  res.status(500).json({
+    error: error.message
+  })
 }
 
